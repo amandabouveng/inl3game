@@ -32,20 +32,28 @@ module.exports = function(grunt){
 		},
 		babel: {
 			options: {
-				sourceMap: true,
-				presets: ['babel-preset-es2015']
+        		sourceMap: true,
+        		presets: ['babel-preset-es2015']
+    		},
+    		dist: {
+        		files: [{
+                	expand: true,
+                	cwd: 'src/js/',
+                	src: ['*.js'],
+                	dest: 'ec5/'
+            	}]
+       		}
+		},
+		/* CONCAT 
+		concat: {
+			options: {
+				separator: '\n'
 			},
 			dist: {
-				files: [
-            				{
-                				expand: true,
-                				cwd: 'src/js',
-                				src: ['*.js'],
-                				dest: 'ec6/'
-            					}
-        				]
+				src: ['ecs/planet.js', 'ecs/planet.js'],
+				dest: 'src/build/script.js'
 			}
-		},
+		},*/
 		/* UGLIFY*/
 		uglify: {
 			options: {
@@ -59,7 +67,7 @@ module.exports = function(grunt){
 			build: {
 				files: [{
 					expand: true,
-					src: 'ec6/*.js',
+					src: 'ec5/*.js',
 					dest: 'js/',
 					flatten: true,
 					rename: function(destBase, destPath){
@@ -74,13 +82,13 @@ module.exports = function(grunt){
 				files: ['**/*.scss'],
 				tasks: ['sass', 'postcss']
 			},
-			ec6: {
+			ec5: {
 				files: ['src/js/*.js'],
 				tasks: ['babel']
 			},
 			js: {
-				files: ['ec6/*.js'],
-				tasks: ['uglify']
+				files: ['ec5/*.js'],
+				tasks: [/*'concat',*/ 'uglify']
 			}
 
 		}
