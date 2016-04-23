@@ -30,6 +30,22 @@ module.exports = function(grunt){
 				src: 'css/*.css'
 			}
 		},
+		babel: {
+			options: {
+				sourceMap: true,
+				presets: ['babel-preset-es2015']
+			},
+			dist: {
+				files: [
+            				{
+                				expand: true,
+                				cwd: 'src/js',
+                				src: ['*.js'],
+                				dest: 'ec6/'
+            					}
+        				]
+			}
+		},
 		/* UGLIFY*/
 		uglify: {
 			options: {
@@ -43,7 +59,7 @@ module.exports = function(grunt){
 			build: {
 				files: [{
 					expand: true,
-					src: 'src/js/*.js',
+					src: 'ec6/*.js',
 					dest: 'js/',
 					flatten: true,
 					rename: function(destBase, destPath){
@@ -58,10 +74,15 @@ module.exports = function(grunt){
 				files: ['**/*.scss'],
 				tasks: ['sass', 'postcss']
 			},
-			js: {
+			ec6: {
 				files: ['src/js/*.js'],
+				tasks: ['babel']
+			},
+			js: {
+				files: ['ec6/*.js'],
 				tasks: ['uglify']
 			}
+
 		}
 	});
 	grunt.registerTask('default', ['watch']);
