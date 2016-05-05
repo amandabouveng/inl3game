@@ -30,30 +30,16 @@ module.exports = function(grunt){
 				src: 'css/*.css'
 			}
 		},
-		babel: {
-			options: {
-        		sourceMap: true,
-        		presets: ['babel-preset-es2015']
-    		},
-    		dist: {
-        		files: [{
-                	expand: true,
-                	cwd: 'src/js/',
-                	src: ['*.js'],
-                	dest: 'ec5/'
-            	}]
-       		}
-		},
-		/* CONCAT 
+		/* CONCAT */
 		concat: {
 			options: {
 				separator: '\n'
 			},
 			dist: {
-				src: ['ecs/planet.js', 'ecs/planet.js'],
+				src: ['src/js/planet.js', 'src/js/main.js'],
 				dest: 'src/build/script.js'
 			}
-		},*/
+		},
 		/* UGLIFY*/
 		uglify: {
 			options: {
@@ -67,7 +53,7 @@ module.exports = function(grunt){
 			build: {
 				files: [{
 					expand: true,
-					src: 'ec5/*.js',
+					src: 'src/build/script.js',
 					dest: 'js/',
 					flatten: true,
 					rename: function(destBase, destPath){
@@ -82,15 +68,10 @@ module.exports = function(grunt){
 				files: ['**/*.scss'],
 				tasks: ['sass', 'postcss']
 			},
-			ec5: {
-				files: ['src/js/*.js'],
-				tasks: ['babel']
-			},
 			js: {
-				files: ['ec5/*.js'],
-				tasks: [/*'concat',*/ 'uglify']
+				files: ['src/js/*.js'],
+				tasks: ['concat', 'uglify']
 			}
-
 		}
 	});
 	grunt.registerTask('default', ['watch']);

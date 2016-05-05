@@ -1,3 +1,6 @@
+function tjoho() {
+	 /* body... */ 
+}
 
 var sun = new Image();
 var mars = new Image(50, 50);
