@@ -1,19 +1,19 @@
 {
 	"Cards": [
 		{
-			"icon": "fa-child",
+			"icon": "<i class='fa fa-star-o' aria-hidden='true'></i>",
 			"color": ""		
 		},
 		{
-			"icon": "fa-child",
+			"icon": "<i class='fa fa-star-o' aria-hidden='true'></i>",
 			"color": ""		
 		},
 		{
-			"icon": "fa-diamond",
+			"icon": "<i class='fa fa-heart-o' aria-hidden='true'></i>",
 			"color": ""		
 		},
 		{
-			"icon": "fa-diamond",
+			"icon": "<i class='fa fa-heart-o' aria-hidden='true'></i>",
 			"color": ""		
 		}
 	]
