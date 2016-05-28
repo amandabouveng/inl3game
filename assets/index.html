@@ -45,44 +45,6 @@ function init() {
 	 cardLoader.send();
 }
 
-/*function fetchCards() {
-	cards = cardBank.Cards;
-	shuffle(cards);
-
-	var board = document.createElement('section');
-	board.setAttribute('id', 'board');
-	document.body.appendChild(board);
-
-	for (var i in cards) {
-	 	_icon = cards[i].icon;
-	 	var card = document.createElement('div');
-	 	var icon = document.createElement('i');
-		icon.classList.add('fa', _icon);
-		icon.style.display = 'none';
-		icon.setAttribute('aria-hidden', 'true');
-
-		board.appendChild(card);
-		card.appendChild(icon);
-	 }
-
-	 document.getElementById('board').addEventListener('click', function(e){
-		var _card = e.path[0].children[0];
-	 	_card.style.display = 'inline';
-	 	console.log(_card);
-	});
-}*/
-
-function shuffle(a) {
-    var j, x, i;
-    for (i = a.length; i; i -= 1) {
-        j = Math.floor(Math.random() * i);
-        x = a[i - 1];
-        a[i - 1] = a[j];
-        a[j] = x;
-    }
-}
-
-	// Original working code
 function fetchCards() {
 	cards = cardBank.Cards;
 	shuffle(cards);
@@ -93,14 +55,10 @@ function fetchCards() {
 
 	for (var i in cards) {
 	 	var _icon = cards[i].icon;
+	 	console.log(_icon);
 	 	var card = document.createElement('div');
-	 	var icon = document.createElement('i');
-		icon.classList.add('fa', _icon);
-		//icon.classList.add('fa', 'fa-question-circle');
-		icon.setAttribute('aria-hidden', 'true');
-
+	 	card.innerHTML = _icon;
 		board.appendChild(card);
-		card.appendChild(icon);
 	 }
 
 	 var elems = document.getElementById('board').getElementsByTagName("i");
@@ -112,19 +70,17 @@ function fetchCards() {
 				});
 			}
 	}
+
+	function shuffle(a) {
+    var j, x, i;
+    for (i = a.length; i; i -= 1) {
+        j = Math.floor(Math.random() * i);
+        x = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = x;
+    }
 }
-	
-
-/*
-Fråga:
-Ska man tänka två divar på varandra? Förutsatt detta -> http://www.minimamente.com/example/magic_animations/
-Eller ska man tänka en div som förändras? (tänker personligen att en kanske är att rekomendera då man annars via inspekorn kan fuska)
-
-Varför hoppar divarna ner?
-Varför krymper boxen?
-
-Vill dock helldre göra som innan och ändra klassen utifrån vilket kort man klickar på... Se version 1
-*/
+}
 	
 </script>
 <body>
