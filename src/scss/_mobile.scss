@@ -60,10 +60,10 @@
 		-webkit-flex: 1 1 auto; /* Safari */
 		flex: 1 1 10em; 
 		perspective: 1000;
-
+		cursor: pointer;
 		&:hover {
 			.flipper {
-				transform: rotateY(180deg);
+				/*transform: rotateY(180deg);*/
 			}
 		}
 
@@ -103,21 +103,13 @@
 
 			padding: .5em;
 			background: #f8f8f8;
-			cursor: pointer;
-			* {
-				margin-bottom: 5px;
-			}
-			h1 {
-				font-family: helvetica;
-				font-size: 14px;
-				font-weight: bolder;
-				
-			}
-			p {
-				font-size: 12px;
-			}
-			p+p {
-				font-weight: bolder;
+			
+			position: relative;
+			i {
+				position: absolute;
+				@include center();
+				@include font-size(60pt);
+				z-index: 2;
 			}
 		}
 	}
