@@ -12,6 +12,7 @@
 }
 
 .main-content {
+	display: none;
 	@include center();
 	text-align: center;
 	width: 25em;

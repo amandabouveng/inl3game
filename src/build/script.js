@@ -7,6 +7,7 @@ var flippers = document.getElementsByClassName('flipper');
 var fronts = document.getElementsByClassName('front');
 var backs = document.getElementsByClassName('back');
 var mainContent = document.getElementById('main-content');
+var header = document.querySelector('header.header');
 
 /*
 * Global variables
@@ -18,6 +19,10 @@ var rows = 5;
 var columns = 6;
 var usedBoxes = [];
 var matchedCards = [];
+var points = 0; 
+var viewCount = 0;
+var gameStatus = 0;
+
 
 /*
 * XMLHttpRequest
@@ -41,6 +46,8 @@ function init() {
 	var grid = cards.length*2;
     rows = Math.sqrt(grid);
     columns = rows;
+
+    header.innerHTML = "Points: "+points;
 
 	for(var i = 0; i < rows; i++) {
 		var obox = document.createElement('div');
@@ -87,34 +94,60 @@ function init() {
 	for (var i in cards) {
 		backs[i].innerHTML = cards[i].icon;
 		flippers[i].setAttribute('id', cards[i].id);
-		boxes[i].addEventListener('click', function(e) {
-			var _target = e.path[1];
-			_target.style.transition = 'transform .6s';
-			_target.style.transform = 'rotateY(180deg)';
-
-			matchedCards.push(_target);
-			console.log(matchedCards);
-			if(matchedCards.length == 3){
-				if(matchedCards[0].id === matchedCards[1].id){
-					matchedCards.splice(0,2);
-				}
-				else {
-					matchedCards[0].style.transform = 'rotateY(0deg)';
-					matchedCards[1].style.transform = 'rotateY(0deg)';
-					matchedCards.splice(0,2);
-				}
-			}
-			cardToMatch = _target;
-			
-		});
+		boxes[i].addEventListener('click', flipCard);
+		
 	}
 
 	/*
 	* Set style
 	*/
-	/*mainContent.style.width = boxes[0].offsetWidth*2+'px';
+	mainContent.style.width = boxes[0].offsetWidth*2+'px';
 	mainContent.style.height = boxes[0].offsetHeight*2+5+'px';
-	mainContent.style.top = boxes[0].offsetHeight*2+'px';*/
+	mainContent.style.top = boxes[0].offsetHeight*2+'px';
+}
+
+function flipCard(e) {
+	var _target = {
+		flipper: e.path[1],
+		box: e.path[2]
+	}
+	_target.flipper.style.transition = 'transform .6s';
+	_target.flipper.style.transform = 'rotateY(180deg)';
+	_target.box.removeEventListener('click', flipCard);
+	viewCount++;
+	matchedCards.push(_target);
+
+	if (matchedCards.length == 2) {
+		if(matchedCards[0].flipper.id === matchedCards[1].flipper.id && viewCount == 2) {
+			points+=5;
+			gameStatus++;
+			viewCount = 0;
+			if (gameStatus == cards.length/2) {
+				// end game
+				mainContent.style.display = 'block';
+			}
+		}
+		else if(matchedCards[0].flipper.id === matchedCards[1].flipper.id) {
+			points++;
+			gameStatus++;
+			viewCount = 0;
+			if (gameStatus == cards.length/2) {
+				// end game
+				mainContent.style.display = 'block';
+			}
+		}
+	}
+	else if(matchedCards.length > 2) {
+		if(matchedCards[0].flipper.id != matchedCards[1].flipper.id){
+			matchedCards[0].flipper.style.transform = 'rotateY(0deg)';
+			matchedCards[1].flipper.style.transform = 'rotateY(0deg)';
+			matchedCards[0].box.addEventListener('click', flipCard);
+			matchedCards[1].box.addEventListener('click', flipCard);
+		}
+		matchedCards.splice(0,2);
+	}
+	cardToMatch = _target;
+	document.querySelector('header.header').innerHTML = "Points: "+points;
 }
 
 function shuffle(a) {
