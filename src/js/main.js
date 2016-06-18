@@ -80,7 +80,6 @@ function init() {
 			flipper.appendChild(front);
 			flipper.appendChild(back);
 			back.appendChild(card_icon);
-			console.log(card_icon);
 			
 		}
 		prevLine.push(line);
@@ -120,6 +119,7 @@ function flipCard(e) {
 		flipper: e.path[1],
 		box: e.path[2]
 	}
+	
 	_target.flipper.style.transition = 'transform .6s';
 	_target.flipper.style.transform = 'rotateY(180deg)';
 	_target.box.removeEventListener('click', flipCard);
@@ -128,17 +128,21 @@ function flipCard(e) {
 
 	if (matchedCards.length == 2) {
 		if(matchedCards[0].flipper.id === matchedCards[1].flipper.id && viewCount == 2) {
+			animationPoints(0);
+			animationPoints(1);
 			points+=5;
 			gameStatus++;
 			viewCount = 0;
 			if (gameStatus == cards.length/2) {
 				// end game
-				
 				endGame();
 
 			}
 		}
-		else if(matchedCards[0].flipper.id === matchedCards[1].flipper.id) {
+
+	else if(matchedCards[0].flipper.id === matchedCards[1].flipper.id) {
+			animationPoints(0);
+			animationPoints(1);
 			points++;
 			gameStatus++;
 			viewCount = 0;
@@ -171,7 +175,6 @@ function endGame() {
 	});
 	
 	for (var i in _sortedHighscore) {
-		console.log('hej');
 		if (points > _sortedHighscore[i].score) {
 			// create and append input and button
 			addScore.style.display = 'block';
@@ -195,7 +198,7 @@ function endGame() {
 function addToHighscore(index, highscore) {
 	var playerName = document.getElementById('nameInput').value;
 	highscore.splice(index, 0, {name: playerName, score: points});
-	console.log(index);
+
 	if (highscore.length > 10) {
 		highscore.pop();
 	}				
@@ -289,6 +292,124 @@ function getRandomFlipper() {
 	};
 	return _obj;
 }
+/*
+* Animation controller
+*/
+	function animationPoints(index) {
+		/* Icon 4 */
+		var el4 = matchedCards[index].flipper.querySelector('div.back'), el4span = el4.querySelector('i');
+		console.log(el4);
+		new Animocon(el4, {
+			tweens : [
+				// burst animation
+				new mojs.Burst({
+					parent: el4,
+					duration: 1500,
+					shape : 'circle',
+					fill : [ '#988ADE', '#DE8AA0', '#8AAEDE', '#8ADEAD', '#DEC58A', '#8AD1DE' ],
+					x: '50%',
+					y: '50%',
+					opacity: 0.6,
+					childOptions: { radius: {20:0} },
+					radius: {40:120},
+					count: 6,
+					isSwirl: true,
+					isRunLess: true,
+					easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
+				}),
+				// ring animation
+				new mojs.Transit({
+					parent: el4,
+					duration: 750,
+					type: 'circle',
+					radius: {0: 50},
+					fill: 'transparent',
+					stroke: '#988ADE',
+					strokeWidth: {15:0},
+					opacity: 0.6,
+					x: '50%',     
+					y: '50%',
+					isRunLess: true,
+					easing: mojs.easing.bezier(0, 1, 0.5, 1)
+				}),
+			],
+			onCheck : function() {
+				el4.style.color = '#988ADE';
+			},
+			onUnCheck : function() {
+				el4.style.color = '#C0C1C3';	
+			}
+		});
+	}
+/*
+* Animation functions
+*/
+	function Animocon(el, options) {
+		this.el = el;
+		this.options = extend( {}, this.options );
+		extend( this.options, options );
+
+		this.checked = false;
+
+		this.timeline = new mojs.Timeline();
+		
+		for(var i = 0, len = this.options.tweens.length; i < len; ++i) {
+			this.timeline.add(this.options.tweens[i]);
+		}
+
+		var self = this;
+		clickHandler();
+		function clickHandler() {
+			if( self.checked ) {
+				self.options.onUnCheck();
+			}
+			else {
+				self.options.onCheck();
+				self.timeline.start();
+			}
+			self.checked = !self.checked;
+		};
+	}
+
+	Animocon.prototype.options = {
+		tweens : [
+			new mojs.Burst({
+				shape : 'circle',
+				isRunLess: true
+			})
+		],
+		onCheck : function() { return false; },
+		onUnCheck : function() { return false; }
+	};
+
+	/*
+	* Animation functions mobile devices/touch 
+	*/
+function isIOSSafari() {
+		var userAgent;
+		userAgent = window.navigator.userAgent;
+		return userAgent.match(/iPad/i) || userAgent.match(/iPhone/i);
+	};
+
+	// taken from mo.js demos
+	function isTouch() {
+		var isIETouch;
+		isIETouch = navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+		return [].indexOf.call(window, 'ontouchstart') >= 0 || isIETouch;
+	};
+	
+	// taken from mo.js demos
+	var isIOS = isIOSSafari(),
+		clickHandler = isIOS || isTouch() ? 'touchstart' : 'click';
+
+		function extend( a, b ) {
+		for( var key in b ) { 
+			if( b.hasOwnProperty( key ) ) {
+				a[key] = b[key];
+			}
+		}
+		return a;
+	}
 
 
 

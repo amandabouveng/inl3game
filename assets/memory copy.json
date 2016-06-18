@@ -5,6 +5,30 @@
 		},
 		{
 			"icon": "<i class='fa fa-heart-o' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-star' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-heart' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-circle-o' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-circle' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-hand-peace-o' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-hand-scissors-o' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-times' aria-hidden='true'></i>"	
+		},
+		{
+			"icon": "<i class='fa fa-plus' aria-hidden='true'></i>"	
 		}
 	],
 	"Highscore": [

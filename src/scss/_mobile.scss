@@ -120,6 +120,40 @@
 	}
 }
 
+/* Icons button */
+.back{
+	position: relative;
+	width: 500px;
+	height: 500px;
+	margin: 0 auto;
+}
+
+.icobutton {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	font-size: 3em;
+	color: #c0c1c3;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.icobutton .fa {
+	display: block;
+	padding: 0 0.1em;
+}
+
+/* fix for mo.js */
+.icobutton svg {
+	left: 0;
+}
+
+
+li {
+	list-style: none;
+}
+
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
