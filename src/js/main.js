@@ -210,6 +210,11 @@ function endGame() {
 				
 				break;
 			}
+			else if (i == _sortedHighscore.length-1) {
+				showScore.style.display = 'none';
+				addScore.style.display = 'block';
+				document.getElementById('button').addEventListener('click', function() {addToHighscore(i, _sortedHighscore)});
+			}
 		}
 	}
 	else {
@@ -221,12 +226,14 @@ function endGame() {
 	/*
 	* Print highscore to highscore list
 	*/
-	for (var obj in _sortedHighscore) {
-		var listitem = document.createElement('li');
+	var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
 
-		listitem.innerHTML = _sortedHighscore[obj].name + ": " + _sortedHighscore[obj].score;
-
-		document.querySelector('#highscore-board ul').appendChild(listitem);
+	console.log(scoreboard.length);
+	for (var li in scoreboard) {
+		if (li < _sortedHighscore.length) {
+			scoreboard[li].innerHTML = highscore[li].name + ": " +	highscore[li].score;
+		}
+		
 	}
 }
 
@@ -241,17 +248,17 @@ function addToHighscore(index, highscore) {
 		highscore.pop();
 	}				
 	
-	if (highscore.length > 0) {
-		var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
+	var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
 
-		for (var li in scoreboard) {
+	for (var li in scoreboard) {
+		if (li < highscore.length) {
 			scoreboard[li].innerHTML = highscore[li].name + ": " +	highscore[li].score;
 		}
+	}	
 
-		scoreboard[index].style.background = '#FF3800';
-		scoreboard[index].style.color = '#FFF';
-		scoreboard[index].style.padding = '5px';
-	}
+	scoreboard[index].style.background = '#FF3800';
+	scoreboard[index].style.color = '#FFF';
+	scoreboard[index].style.padding = '5px';
 
 	addScore.style.display = 'none';
 	saveJSONtoServer(highscore);
@@ -338,7 +345,6 @@ function getRandomColor(i, j, line) {
 
 function animationPoints(index) {
 	var el = matchedCards[index].flipper.querySelector('div.back'), eli = el.querySelector('i');
-	console.log(el);
 	new Animocon(el, {
 		tweens : [
 			// burst animation
