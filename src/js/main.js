@@ -63,10 +63,13 @@ function init() {
 			var flipper = document.createElement('div');
 			var front = document.createElement('div');
 			var back = document.createElement('div');
+			var card_icon = document.createElement('span');
+
 			ibox.classList.add('ibox');
 			flipper.classList.add('flipper');
 			front.classList.add('front');
 			back.classList.add('back');
+			card_icon.classList.add('card_icon');
 
 			color = getRandomColor(i, j, line);
 			front.style.background = color;
@@ -75,6 +78,8 @@ function init() {
 			ibox.appendChild(flipper);
 			flipper.appendChild(front);
 			flipper.appendChild(back);
+			back.appendChild(card_icon);
+			console.log(card_icon);
 			
 		}
 		prevLine.push(line);

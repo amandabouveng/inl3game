@@ -29,13 +29,16 @@ var gameStatus = 0;
 */
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.overrideMimeType("application/json");
-var url = "assets/cards.json";
-var cards = []; 
+var url = "assets/memory.json";
+var cards = [];
+var initCards = [];
+var highscore = []; 
 xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    	var _cardBank = JSON.parse(xmlhttp.responseText);
-        cards = _cardBank.Cards;
-        
+    	var _gameBank = JSON.parse(xmlhttp.responseText);
+        cards = _gameBank.Cards;
+        initCards = cards.slice();
+        highscore = _gameBank.Highscore;
         init();
     }
 };
@@ -60,10 +63,13 @@ function init() {
 			var flipper = document.createElement('div');
 			var front = document.createElement('div');
 			var back = document.createElement('div');
+			var card_icon = document.createElement('span');
+
 			ibox.classList.add('ibox');
 			flipper.classList.add('flipper');
 			front.classList.add('front');
 			back.classList.add('back');
+			card_icon.classList.add('card_icon');
 
 			color = getRandomColor(i, j, line);
 			front.style.background = color;
@@ -72,6 +78,8 @@ function init() {
 			ibox.appendChild(flipper);
 			flipper.appendChild(front);
 			flipper.appendChild(back);
+			back.appendChild(card_icon);
+			console.log(card_icon);
 			
 		}
 		prevLine.push(line);
@@ -124,7 +132,9 @@ function flipCard(e) {
 			viewCount = 0;
 			if (gameStatus == cards.length/2) {
 				// end game
-				mainContent.style.display = 'block';
+				
+				endGame();
+
 			}
 		}
 		else if(matchedCards[0].flipper.id === matchedCards[1].flipper.id) {
@@ -133,7 +143,9 @@ function flipCard(e) {
 			viewCount = 0;
 			if (gameStatus == cards.length/2) {
 				// end game
-				mainContent.style.display = 'block';
+				
+				endGame();
+
 			}
 		}
 	}
@@ -148,6 +160,68 @@ function flipCard(e) {
 	}
 	cardToMatch = _target;
 	document.querySelector('header.header').innerHTML = "Points: "+points;
+}
+
+function endGame() {
+	mainContent.style.display = 'block';
+	
+	var _sortedHighscore = highscore.sort(function (a, b) {
+		return b.score-a.score;
+	});
+	
+	for (var obj in _sortedHighscore) {
+		console.log('hej');
+		if (points > _sortedHighscore[obj].score) {
+			// create and append input and button
+			var nameInput = document.createElement('input');
+			nameInput.setAttribute('type', 'text');
+			nameInput.setAttribute('id', 'nameInput');
+			var button = document.createElement('button');
+			button.setAttribute('id', 'button');
+			mainContent.appendChild(nameInput);
+			mainContent.appendChild(button);
+
+			button.addEventListener('click', function() {addToHighscore(obj, _sortedHighscore)});
+			
+			break;
+		}
+	}
+	console.log(_sortedHighscore);
+
+	
+}
+
+function addToHighscore(index, highscore) {
+	var playerName = document.getElementById('nameInput').value;
+	highscore.splice(index, 0, {name: playerName, score: points});
+	if (highscore.length > 10) {
+		highscore.pop();
+	}				
+	console.log(playerName);
+
+	saveJSONtoServer(highscore);
+}
+
+function saveJSONtoServer(input) {
+
+	var str_json = JSON.stringify({
+		Cards: initCards,
+		Highscore: input
+	});
+
+	var request = new XMLHttpRequest();
+
+	request.onreadystatechange = function() {
+	    if (request.readyState == 4 && request.status == 200) {
+	    	console.log('yay');
+	    }
+	};
+
+    request.open("POST", "../../assets/JSONhandler.php", true);
+
+    request.setRequestHeader("Content-type", "application/json");
+
+    request.send(str_json);
 }
 
 function shuffle(a) {
