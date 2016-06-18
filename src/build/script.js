@@ -8,6 +8,7 @@ var fronts = document.getElementsByClassName('front');
 var backs = document.getElementsByClassName('back');
 var mainContent = document.getElementById('main-content');
 var header = document.querySelector('header.header');
+var addScore = document.getElementById('add-score');
 
 /*
 * Global variables
@@ -29,13 +30,16 @@ var gameStatus = 0;
 */
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.overrideMimeType("application/json");
-var url = "assets/cards.json";
-var cards = []; 
+var url = "assets/memory.json";
+var cards = [];
+var initCards = [];
+var highscore = []; 
 xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    	var _cardBank = JSON.parse(xmlhttp.responseText);
-        cards = _cardBank.Cards;
-        
+    	var _gameBank = JSON.parse(xmlhttp.responseText);
+        cards = _gameBank.Cards;
+        initCards = cards.slice();
+        highscore = _gameBank.Highscore;
         init();
     }
 };
@@ -124,7 +128,9 @@ function flipCard(e) {
 			viewCount = 0;
 			if (gameStatus == cards.length/2) {
 				// end game
-				mainContent.style.display = 'block';
+				
+				endGame();
+
 			}
 		}
 		else if(matchedCards[0].flipper.id === matchedCards[1].flipper.id) {
@@ -133,7 +139,9 @@ function flipCard(e) {
 			viewCount = 0;
 			if (gameStatus == cards.length/2) {
 				// end game
-				mainContent.style.display = 'block';
+				
+				endGame();
+
 			}
 		}
 	}
@@ -148,6 +156,74 @@ function flipCard(e) {
 	}
 	cardToMatch = _target;
 	document.querySelector('header.header').innerHTML = "Points: "+points;
+}
+
+function endGame() {
+	mainContent.style.display = 'block';
+	
+	var _sortedHighscore = highscore.sort(function (a, b) {
+		return b.score-a.score;
+	});
+	
+	for (var obj in _sortedHighscore) {
+		console.log('hej');
+		if (points > _sortedHighscore[obj].score) {
+			// create and append input and button
+			addScore.style.display = 'block'
+			document.getElementById('button').addEventListener('click', function() {addToHighscore(obj, _sortedHighscore)});
+			
+			break;
+		}
+	}
+
+	for (var obj in _sortedHighscore) {
+		var listitem = document.createElement('li');
+
+		listitem.innerHTML = _sortedHighscore[obj].name + ": " + _sortedHighscore[obj].score;
+
+		document.querySelector('#highscore-board ul').appendChild(listitem);
+	}
+	
+
+}
+
+function addToHighscore(index, highscore) {
+	var playerName = document.getElementById('nameInput').value;
+	highscore.splice(index, 0, {name: playerName, score: points});
+	console.log(highscore);
+	if (highscore.length > 10) {
+		highscore.pop();
+	}				
+	
+	var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
+
+	for (var li in scoreboard) {
+		scoreboard[li].innerHTML = highscore[li].name + ": " +	highscore[li].score;
+	}
+
+	saveJSONtoServer(highscore);
+}
+
+function saveJSONtoServer(input) {
+
+	var str_json = JSON.stringify({
+		Cards: initCards,
+		Highscore: input
+	});
+
+	var request = new XMLHttpRequest();
+
+	request.onreadystatechange = function() {
+	    if (request.readyState == 4 && request.status == 200) {
+	    	console.log('yay');
+	    }
+	};
+
+    request.open("POST", "../../assets/JSONhandler.php", true);
+
+    request.setRequestHeader("Content-type", "application/json");
+
+    request.send(str_json);
 }
 
 function shuffle(a) {
