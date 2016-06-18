@@ -165,12 +165,12 @@ function endGame() {
 		return b.score-a.score;
 	});
 	
-	for (var obj in _sortedHighscore) {
+	for (var i in _sortedHighscore) {
 		console.log('hej');
-		if (points > _sortedHighscore[obj].score) {
+		if (points > _sortedHighscore[i].score) {
 			// create and append input and button
-			addScore.style.display = 'block'
-			document.getElementById('button').addEventListener('click', function() {addToHighscore(obj, _sortedHighscore)});
+			addScore.style.display = 'block';
+			document.getElementById('button').addEventListener('click', function() {addToHighscore(i, _sortedHighscore)});
 			
 			break;
 		}
@@ -190,7 +190,7 @@ function endGame() {
 function addToHighscore(index, highscore) {
 	var playerName = document.getElementById('nameInput').value;
 	highscore.splice(index, 0, {name: playerName, score: points});
-	console.log(highscore);
+	console.log(index);
 	if (highscore.length > 10) {
 		highscore.pop();
 	}				
