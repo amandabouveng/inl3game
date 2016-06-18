@@ -1,10 +1,60 @@
+
 #add-score {
 	display: none;
+
+	fieldset {
+		width: 6em;
+		margin: 0 auto;
+
+		* {
+			margin: .5em;
+		}
+
+		button {
+			padding: .5em 2em;
+			border-radius: 0;
+			background: #FF3800;
+			color: white;
+			border: none;
+		}
+	}
+}
+
+#add-score, #show-score, #highscore-board {
+	font-family: 'helvetica';
+	margin: 0 0 2em 0;
+
+	h2 {
+		@include font-size(24px);
+		margin: 0 0 1em 0;
+	}
+
+	li {
+		@include font-size(14px);
+		margin: 0 0 1em 0;
+	}
+
+	p {
+		font-family: 'helvetica';
+		@include font-size(14px);
+		margin: 0 0 2em 0;
+	}
+}
+
+#highscore-board {
+	h2 {
+		padding: .5em;
+		background: #FF3800;
+		color: white;
+	}
 }
 
 .header {
-	height: 4vh;
+	font-family: 'helvetica';
+	font-size: 1.5em;
+	color: white;
 	background: #FF3800;
+	padding: .5em;
 }
 
 .posRel {
@@ -20,7 +70,7 @@
 	@include center();
 	text-align: center;
 	width: 25em;
-	height: 15em;
+	height: auto;
 	background: white;
 	padding: 2.5em;
 	color: #FF3800;
@@ -32,14 +82,12 @@
 		margin: 0 0 1em 0;
 	} 
 	p {
+		font-family: 'helvetica';
 		margin: 0 0 2em 0;
 	}
 	li {
-		padding: 1em;
-		background: rgba(0,255,0,.3);
-		&:hover {
-			background: rgba(0,255,0,1)
-		}
+		font-family: 'helvetica';
+		list-style: none;
 	}
 }
 

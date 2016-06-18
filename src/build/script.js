@@ -9,6 +9,7 @@ var backs = document.getElementsByClassName('back');
 var mainContent = document.getElementById('main-content');
 var header = document.querySelector('header.header');
 var addScore = document.getElementById('add-score');
+var showScore = document.getElementById('show-score');
 
 /*
 * Global variables
@@ -111,7 +112,6 @@ function init() {
 	* Set style
 	*/
 	mainContent.style.width = boxes[0].offsetWidth*2+'px';
-	mainContent.style.height = boxes[0].offsetHeight*2+5+'px';
 	mainContent.style.top = boxes[0].offsetHeight*2+'px';
 }
 
@@ -165,15 +165,16 @@ function flipCard(e) {
 
 function endGame() {
 	mainContent.style.display = 'block';
-	
+	showScore.querySelector('p').innerHTML = points;
 	var _sortedHighscore = highscore.sort(function (a, b) {
 		return b.score-a.score;
 	});
 	
-	for (var obj in _sortedHighscore) {
+	for (var i in _sortedHighscore) {
 		console.log('hej');
-		if (points > _sortedHighscore[obj].score) {
+		if (points > _sortedHighscore[i].score) {
 			// create and append input and button
+<<<<<<< HEAD
 <<<<<<< HEAD
 			var nameInput = document.createElement('input');
 			nameInput.setAttribute('type', 'text');
@@ -188,6 +189,11 @@ function endGame() {
 			addScore.style.display = 'block'
 			document.getElementById('button').addEventListener('click', function() {addToHighscore(obj, _sortedHighscore)});
 >>>>>>> 37004af7f052c456f6031b60aa26061512d113d4
+=======
+			showScore.style.display = 'none';
+			addScore.style.display = 'block';
+			document.getElementById('button').addEventListener('click', function() {addToHighscore(i, _sortedHighscore)});
+>>>>>>> 44bd3e8145330cb30b122f6275e37e4a919853f2
 			
 			break;
 		}
@@ -214,12 +220,16 @@ function addToHighscore(index, highscore) {
 	var playerName = document.getElementById('nameInput').value;
 	highscore.splice(index, 0, {name: playerName, score: points});
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (highscore.length > 10) {
 		highscore.pop();
 	}				
 	console.log(playerName);
 =======
 	console.log(highscore);
+=======
+	console.log(index);
+>>>>>>> 44bd3e8145330cb30b122f6275e37e4a919853f2
 	if (highscore.length > 10) {
 		highscore.pop();
 	}				
@@ -231,6 +241,11 @@ function addToHighscore(index, highscore) {
 	}
 >>>>>>> 37004af7f052c456f6031b60aa26061512d113d4
 
+	scoreboard[index].style.background = '#FF3800';
+	scoreboard[index].style.color = '#FFF';
+	scoreboard[index].style.padding = '5px';
+
+	addScore.style.display = 'none';
 	saveJSONtoServer(highscore);
 }
 
