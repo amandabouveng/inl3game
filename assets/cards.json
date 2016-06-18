@@ -24,5 +24,27 @@
 		{
 			"icon": "<i class='fa fa-hand-scissors-o' aria-hidden='true'></i>"	
 		}
+	],
+	"Highscore": [
+		{
+			"name": "Thomas",
+			"score": "100"
+		},
+		{
+			"name": "Amanda",
+			"score": "150"
+		},
+		{
+			"name": "PTP",
+			"score": "10"
+		},
+		{
+			"name": "fuckboy",
+			"score": "20"
+		},
+		{
+			"name": "Haren",
+			"score": "16"
+		}
 	]
 }
