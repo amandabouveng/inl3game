@@ -11,7 +11,6 @@
 		},
 		{
 			"icon": "<i class='fa fa-heart' aria-hidden='true'></i>"	
-<<<<<<< HEAD
 		},
 		{
 			"icon": "<i class='fa fa-circle-o' aria-hidden='true'></i>"	
@@ -30,8 +29,6 @@
 		},
 		{
 			"icon": "<i class='fa fa-plus' aria-hidden='true'></i>"	
-=======
->>>>>>> 44bd3e8145330cb30b122f6275e37e4a919853f2
 		}
 	],
 	"Highscore": [

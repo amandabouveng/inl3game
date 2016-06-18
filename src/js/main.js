@@ -14,7 +14,7 @@ var showScore = document.getElementById('show-score');
 /*
 * Global variables
 */
-var colors = ['rgba(0, 165, 191, 0.5)', 'rgba(0, 110, 127, 0.5)', 'rgba(0, 221, 255, 0.5)', 'rgba(0, 55, 64, 0.5)', 'rgba(0, 199, 229, 0.5)', 'rgba(27,120,127,0.5)'];
+var colors = ['#CC6996', '#8D4867', '#40212F', '#4D2838', '#331A25', '#FF85BB'];
 var prevLine = [];
 var current;
 var rows = 5;
@@ -25,7 +25,6 @@ var points = 0;
 var viewCount = 0;
 var gameStatus = 0;
 
-
 /*
 * XMLHttpRequest
 */
@@ -35,6 +34,7 @@ var url = "assets/memory.json";
 var cards = [];
 var initCards = [];
 var highscore = []; 
+
 xmlhttp.onreadystatechange = function() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
     	var _gameBank = JSON.parse(xmlhttp.responseText);
@@ -47,6 +47,9 @@ xmlhttp.onreadystatechange = function() {
 xmlhttp.open("GET", url, true);
 xmlhttp.send(); 
 
+/*
+* Draw game board / grid and Shuffle cards
+*/
 function init() {
 	var grid = cards.length*2;
     rows = Math.sqrt(grid);
@@ -65,13 +68,11 @@ function init() {
 			var flipper = document.createElement('div');
 			var front = document.createElement('div');
 			var back = document.createElement('div');
-			var card_icon = document.createElement('span');
 
 			ibox.classList.add('ibox');
 			flipper.classList.add('flipper');
 			front.classList.add('front');
 			back.classList.add('back');
-			card_icon.classList.add('card_icon');
 
 			color = getRandomColor(i, j, line);
 			front.style.background = color;
@@ -80,7 +81,6 @@ function init() {
 			ibox.appendChild(flipper);
 			flipper.appendChild(front);
 			flipper.appendChild(back);
-			back.appendChild(card_icon);
 			
 		}
 		prevLine.push(line);
@@ -104,7 +104,6 @@ function init() {
 		backs[i].innerHTML = cards[i].icon;
 		flippers[i].setAttribute('id', cards[i].id);
 		boxes[i].addEventListener('click', flipCard);
-		
 	}
 
 	/*
@@ -114,6 +113,9 @@ function init() {
 	mainContent.style.top = boxes[0].offsetHeight*2+'px';
 }
 
+/*
+* Logic when card flips
+*/
 function flipCard(e) {
 	var _target = {
 		flipper: e.path[1],
@@ -127,33 +129,49 @@ function flipCard(e) {
 	matchedCards.push(_target);
 
 	if (matchedCards.length == 2) {
+		/*
+		*If cards match on first try
+		*/
 		if(matchedCards[0].flipper.id === matchedCards[1].flipper.id && viewCount == 2) {
-			animationPoints(0);
-			animationPoints(1);
+			setTimeout(function(){
+				animationPoints(0);
+				animationPoints(1);
+			}, 400);
+
 			points+=5;
 			gameStatus++;
 			viewCount = 0;
 			if (gameStatus == cards.length/2) {
-				// end game
+				/*
+				* Game is finished
+				*/
 				endGame();
-
 			}
 		}
+		/*
+		*If cards match (not first try)
+		*/
+		else if(matchedCards[0].flipper.id === matchedCards[1].flipper.id) {
+			setTimeout(function(){
+				animationPoints(0);
+				animationPoints(1);
+			}, 400);
 
-	else if(matchedCards[0].flipper.id === matchedCards[1].flipper.id) {
-			animationPoints(0);
-			animationPoints(1);
 			points++;
 			gameStatus++;
 			viewCount = 0;
 			if (gameStatus == cards.length/2) {
-				// end game
-				
+				/*
+				* Game is finished
+				*/
 				endGame();
-
 			}
 		}
 	}
+
+	/*
+	* If cards doesn't match flip them back
+	*/
 	else if(matchedCards.length > 2) {
 		if(matchedCards[0].flipper.id != matchedCards[1].flipper.id){
 			matchedCards[0].flipper.style.transform = 'rotateY(0deg)';
@@ -167,24 +185,42 @@ function flipCard(e) {
 	document.querySelector('header.header').innerHTML = "Points: "+points;
 }
 
+/*
+* Logic when game ends
+*/
 function endGame() {
 	mainContent.style.display = 'block';
 	showScore.querySelector('p').innerHTML = points;
+	/*
+	* Sort highscore array
+	*/
 	var _sortedHighscore = highscore.sort(function (a, b) {
 		return b.score-a.score;
 	});
 	
-	for (var i in _sortedHighscore) {
-		if (points > _sortedHighscore[i].score) {
-			// create and append input and button
-			showScore.style.display = 'none';
-			addScore.style.display = 'block';
-			document.getElementById('button').addEventListener('click', function() {addToHighscore(i, _sortedHighscore)});
-			
-			break;
+	/*
+	* Check if game score is qualified for highscore
+	*/
+	if (_sortedHighscore.length > 0) {
+		for (var i in _sortedHighscore) {
+			if (points > _sortedHighscore[i].score) {
+				showScore.style.display = 'none';
+				addScore.style.display = 'block';
+				document.getElementById('button').addEventListener('click', function() {addToHighscore(i, _sortedHighscore)});
+				
+				break;
+			}
 		}
 	}
+	else {
+		showScore.style.display = 'none';
+		addScore.style.display = 'block';
+		document.getElementById('button').addEventListener('click', function() {addToHighscore(i, _sortedHighscore)});
+	}
 
+	/*
+	* Print highscore to highscore list
+	*/
 	for (var obj in _sortedHighscore) {
 		var listitem = document.createElement('li');
 
@@ -192,10 +228,11 @@ function endGame() {
 
 		document.querySelector('#highscore-board ul').appendChild(listitem);
 	}
-	
-
 }
 
+/*
+* Logic for adding player to highscore list
+*/
 function addToHighscore(index, highscore) {
 	var playerName = document.getElementById('nameInput').value;
 	highscore.splice(index, 0, {name: playerName, score: points});
@@ -204,22 +241,26 @@ function addToHighscore(index, highscore) {
 		highscore.pop();
 	}				
 	
-	var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
+	if (highscore.length > 0) {
+		var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
 
-	for (var li in scoreboard) {
-		scoreboard[li].innerHTML = highscore[li].name + ": " +	highscore[li].score;
+		for (var li in scoreboard) {
+			scoreboard[li].innerHTML = highscore[li].name + ": " +	highscore[li].score;
+		}
+
+		scoreboard[index].style.background = '#FF3800';
+		scoreboard[index].style.color = '#FFF';
+		scoreboard[index].style.padding = '5px';
 	}
-
-	scoreboard[index].style.background = '#FF3800';
-	scoreboard[index].style.color = '#FFF';
-	scoreboard[index].style.padding = '5px';
 
 	addScore.style.display = 'none';
 	saveJSONtoServer(highscore);
 }
 
+/*
+* Save highscore result to server
+*/
 function saveJSONtoServer(input) {
-
 	var str_json = JSON.stringify({
 		Cards: initCards,
 		Highscore: input
@@ -227,21 +268,17 @@ function saveJSONtoServer(input) {
 
 	var request = new XMLHttpRequest();
 
-	request.onreadystatechange = function() {
-	    if (request.readyState == 4 && request.status == 200) {
-	    	console.log('yay');
-	    }
-	};
-
     request.open("POST", "../../assets/JSONhandler.php", true);
-
     request.setRequestHeader("Content-type", "application/json");
-
     request.send(str_json);
 }
 
+/*
+* Logic to shuffle card array
+*/
 function shuffle(a) {
     var j, x, i;
+
     for (i = a.length; i; i -= 1) {
         j = Math.floor(Math.random() * i);
         x = a[i - 1];
@@ -250,6 +287,9 @@ function shuffle(a) {
     }
 }
 
+/*
+* Set card style
+*/
 function showBox(i) {
 	boxes[i].style.transition = "opacity 0.5s linear 0s";
 	boxes[i].style.opacity = '1';
@@ -260,7 +300,9 @@ function showBox(i) {
 	backs[i].style.height = boxes[i].offsetHeight+'px';
 }
 
-
+/*
+* Logic for random card colors
+*/
 function getRandomColor(i, j, line) {
 	var _randomNumber = Math.round(Math.random()*(copyOfColors.length-1));
 	var _color;	
@@ -289,133 +331,103 @@ function getRandomColor(i, j, line) {
 	return _color;
 }
 
-function getRandomFlipper() {
-	var _obj = {
-		randomNumber: Math.round(Math.random()*flippers.length),
-		flipper: function() {
-			return flippers[this.randomNumber];
-		}
-	};
-	return _obj;
-}
 /*
-* Animation controller
+* Logic for animation when card match 
+* source: http://tympanus.net/Development/Animocons/
 */
-	function animationPoints(index) {
-		/* Icon 4 */
-		var el4 = matchedCards[index].flipper.querySelector('div.back'), el4span = el4.querySelector('i');
-		console.log(el4);
-		new Animocon(el4, {
-			tweens : [
-				// burst animation
-				new mojs.Burst({
-					parent: el4,
-					duration: 1500,
-					shape : 'circle',
-					fill : [ '#988ADE', '#DE8AA0', '#8AAEDE', '#8ADEAD', '#DEC58A', '#8AD1DE' ],
-					x: '50%',
-					y: '50%',
-					opacity: 0.6,
-					childOptions: { radius: {20:0} },
-					radius: {40:120},
-					count: 6,
-					isSwirl: true,
-					isRunLess: true,
-					easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
-				}),
-				// ring animation
-				new mojs.Transit({
-					parent: el4,
-					duration: 750,
-					type: 'circle',
-					radius: {0: 50},
-					fill: 'transparent',
-					stroke: '#988ADE',
-					strokeWidth: {15:0},
-					opacity: 0.6,
-					x: '50%',     
-					y: '50%',
-					isRunLess: true,
-					easing: mojs.easing.bezier(0, 1, 0.5, 1)
-				}),
-			],
-			onCheck : function() {
-				el4.style.color = '#988ADE';
-			},
-			onUnCheck : function() {
-				el4.style.color = '#C0C1C3';	
-			}
-		});
-	}
-/*
-* Animation functions
-*/
-	function Animocon(el, options) {
-		this.el = el;
-		this.options = extend( {}, this.options );
-		extend( this.options, options );
 
-		this.checked = false;
-
-		this.timeline = new mojs.Timeline();
-		
-		for(var i = 0, len = this.options.tweens.length; i < len; ++i) {
-			this.timeline.add(this.options.tweens[i]);
-		}
-
-		var self = this;
-		clickHandler();
-		function clickHandler() {
-			if( self.checked ) {
-				self.options.onUnCheck();
-			}
-			else {
-				self.options.onCheck();
-				self.timeline.start();
-			}
-			self.checked = !self.checked;
-		};
-	}
-
-	Animocon.prototype.options = {
+function animationPoints(index) {
+	var el = matchedCards[index].flipper.querySelector('div.back'), eli = el.querySelector('i');
+	console.log(el);
+	new Animocon(el, {
 		tweens : [
+			// burst animation
 			new mojs.Burst({
+				parent: el,
+				duration: 1500,
 				shape : 'circle',
-				isRunLess: true
-			})
+				fill : [ '#7F344D', '#DE8AA0', '#8AAEDE', '#8ADEAD', '#DEC58A', '#8AD1DE' ],
+				x: '50%',
+				y: '50%',
+				opacity: 0.6,
+				childOptions: { radius: {20:0} },
+				radius: {40:120},
+				count: 6,
+				isSwirl: true,
+				isRunLess: true,
+				easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
+			}),
+			// ring animation
+			new mojs.Transit({
+				parent: el,
+				duration: 750,
+				type: 'circle',
+				radius: {0: 50},
+				fill: 'transparent',
+				stroke: '#40212F',
+				strokeWidth: {15:0},
+				opacity: 0.6,
+				x: '50%',     
+				y: '50%',
+				isRunLess: true,
+				easing: mojs.easing.bezier(0, 1, 0.5, 1)
+			}),
 		],
-		onCheck : function() { return false; },
-		onUnCheck : function() { return false; }
-	};
-
-	/*
-	* Animation functions mobile devices/touch 
-	*/
-function isIOSSafari() {
-		var userAgent;
-		userAgent = window.navigator.userAgent;
-		return userAgent.match(/iPad/i) || userAgent.match(/iPhone/i);
-	};
-
-	// taken from mo.js demos
-	function isTouch() {
-		var isIETouch;
-		isIETouch = navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
-		return [].indexOf.call(window, 'ontouchstart') >= 0 || isIETouch;
-	};
-	
-	// taken from mo.js demos
-	var isIOS = isIOSSafari(),
-		clickHandler = isIOS || isTouch() ? 'touchstart' : 'click';
-
-		function extend( a, b ) {
-		for( var key in b ) { 
-			if( b.hasOwnProperty( key ) ) {
-				a[key] = b[key];
-			}
+		onCheck : function() {
+			el.style.color = '#40212F';
+		},
+		onUnCheck : function() {
+			el.style.color = '#C0C1C3';	
 		}
-		return a;
+	});
+}
+
+function Animocon(el, options) {
+	this.el = el;
+	this.options = extend( {}, this.options );
+	extend( this.options, options );
+
+	this.checked = false;
+
+	this.timeline = new mojs.Timeline();
+		
+	for(var i = 0, len = this.options.tweens.length; i < len; ++i) {
+		this.timeline.add(this.options.tweens[i]);
 	}
+
+	var self = this;
+	matchHandler();
+	function matchHandler() {
+		if( self.checked ) {
+			self.options.onUnCheck();
+		}
+		else {
+			self.options.onCheck();
+			self.timeline.start();
+		}
+		self.checked = !self.checked;
+	};
+}
+
+Animocon.prototype.options = {
+	tweens : [
+		new mojs.Burst({
+			shape : 'circle',
+			isRunLess: true
+		})
+	],
+	onCheck : function() { return false; },
+	onUnCheck : function() { return false; }
+};
+
+function extend( a, b ) {
+	for( var key in b ) { 
+		if( b.hasOwnProperty( key ) ) {
+			a[key] = b[key];
+		}
+	}
+	return a;
+}
 
 
 

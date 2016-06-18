@@ -1,3 +1,8 @@
+$primary-color: rgb(51, 26, 37);
+$checked: rgb(51, 26, 37);
+$unchecked: #6F4B5A;
+$background: #E6DBD6; 
+$background-cards: #C1AC9C;
 
 #add-score {
 	display: none;
@@ -13,7 +18,7 @@
 		button {
 			padding: .5em 2em;
 			border-radius: 0;
-			background: #FF3800;
+			background: $primary-color;
 			color: white;
 			border: none;
 		}
@@ -44,7 +49,7 @@
 #highscore-board {
 	h2 {
 		padding: .5em;
-		background: #FF3800;
+		background: rgb(51, 26, 37);
 		color: white;
 	}
 }
@@ -52,8 +57,8 @@
 .header {
 	font-family: 'helvetica';
 	font-size: 1.5em;
-	color: white;
-	background: #FF3800;
+	color: $background;
+	background: #C1AC9C;
 	padding: .5em;
 }
 
@@ -71,10 +76,10 @@
 	text-align: center;
 	width: 25em;
 	height: auto;
-	background: white;
+	background: $background;
 	padding: 2.5em;
-	color: #FF3800;
-	border-top: 1em solid #FF3800;
+	color: $primary-color;
+	border-top: 1em solid $primary-color;
 	z-index: 100;
 	h1 {
 		font-family: 'helvetica';
@@ -155,7 +160,7 @@
 			transform: rotateY(180deg);
 
 			padding: .5em;
-			background: #f8f8f8;
+			background: $background-cards;
 			
 			position: relative;
 			i {
@@ -167,14 +172,8 @@
 		}
 	}
 }
-
 /* Icons button */
-.back{
-	position: relative;
-	width: 500px;
-	height: 500px;
-	margin: 0 auto;
-}
+
 
 .icobutton {
 	position: absolute;
@@ -182,7 +181,7 @@
 	left: 50%;
 	transform: translateX(-50%) translateY(-50%);
 	font-size: 3em;
-	color: #c0c1c3;
+	color: #fff;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
@@ -195,12 +194,6 @@
 .icobutton svg {
 	left: 0;
 }
-
-
-li {
-	list-style: none;
-}
-
 
 @keyframes fadeIn {
   0% {
