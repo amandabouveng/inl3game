@@ -8,6 +8,7 @@ var fronts = document.getElementsByClassName('front');
 var backs = document.getElementsByClassName('back');
 var mainContent = document.getElementById('main-content');
 var header = document.querySelector('header.header');
+var addScore = document.getElementById('add-score');
 
 /*
 * Global variables
@@ -173,6 +174,7 @@ function endGame() {
 		console.log('hej');
 		if (points > _sortedHighscore[obj].score) {
 			// create and append input and button
+<<<<<<< HEAD
 			var nameInput = document.createElement('input');
 			nameInput.setAttribute('type', 'text');
 			nameInput.setAttribute('id', 'nameInput');
@@ -182,22 +184,52 @@ function endGame() {
 			mainContent.appendChild(button);
 
 			button.addEventListener('click', function() {addToHighscore(obj, _sortedHighscore)});
+=======
+			addScore.style.display = 'block'
+			document.getElementById('button').addEventListener('click', function() {addToHighscore(obj, _sortedHighscore)});
+>>>>>>> 37004af7f052c456f6031b60aa26061512d113d4
 			
 			break;
 		}
 	}
+<<<<<<< HEAD
 	console.log(_sortedHighscore);
 
 	
+=======
+
+	for (var obj in _sortedHighscore) {
+		var listitem = document.createElement('li');
+
+		listitem.innerHTML = _sortedHighscore[obj].name + ": " + _sortedHighscore[obj].score;
+
+		document.querySelector('#highscore-board ul').appendChild(listitem);
+	}
+	
+
+>>>>>>> 37004af7f052c456f6031b60aa26061512d113d4
 }
 
 function addToHighscore(index, highscore) {
 	var playerName = document.getElementById('nameInput').value;
 	highscore.splice(index, 0, {name: playerName, score: points});
+<<<<<<< HEAD
 	if (highscore.length > 10) {
 		highscore.pop();
 	}				
 	console.log(playerName);
+=======
+	console.log(highscore);
+	if (highscore.length > 10) {
+		highscore.pop();
+	}				
+	
+	var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
+
+	for (var li in scoreboard) {
+		scoreboard[li].innerHTML = highscore[li].name + ": " +	highscore[li].score;
+	}
+>>>>>>> 37004af7f052c456f6031b60aa26061512d113d4
 
 	saveJSONtoServer(highscore);
 }

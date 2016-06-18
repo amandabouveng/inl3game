@@ -8,6 +8,7 @@ var fronts = document.getElementsByClassName('front');
 var backs = document.getElementsByClassName('back');
 var mainContent = document.getElementById('main-content');
 var header = document.querySelector('header.header');
+var addScore = document.getElementById('add-score');
 
 /*
 * Global variables
@@ -169,35 +170,41 @@ function endGame() {
 		return b.score-a.score;
 	});
 	
-	for (var obj in _sortedHighscore) {
+	for (var i in _sortedHighscore) {
 		console.log('hej');
-		if (points > _sortedHighscore[obj].score) {
+		if (points > _sortedHighscore[i].score) {
 			// create and append input and button
-			var nameInput = document.createElement('input');
-			nameInput.setAttribute('type', 'text');
-			nameInput.setAttribute('id', 'nameInput');
-			var button = document.createElement('button');
-			button.setAttribute('id', 'button');
-			mainContent.appendChild(nameInput);
-			mainContent.appendChild(button);
-
-			button.addEventListener('click', function() {addToHighscore(obj, _sortedHighscore)});
+			addScore.style.display = 'block';
+			document.getElementById('button').addEventListener('click', function() {addToHighscore(i, _sortedHighscore)});
 			
 			break;
 		}
 	}
-	console.log(_sortedHighscore);
 
+	for (var obj in _sortedHighscore) {
+		var listitem = document.createElement('li');
+
+		listitem.innerHTML = _sortedHighscore[obj].name + ": " + _sortedHighscore[obj].score;
+
+		document.querySelector('#highscore-board ul').appendChild(listitem);
+	}
 	
+
 }
 
 function addToHighscore(index, highscore) {
 	var playerName = document.getElementById('nameInput').value;
 	highscore.splice(index, 0, {name: playerName, score: points});
+	console.log(index);
 	if (highscore.length > 10) {
 		highscore.pop();
 	}				
-	console.log(playerName);
+	
+	var scoreboard = [].slice.call(document.querySelectorAll( '#highscore-board ul li' ));
+
+	for (var li in scoreboard) {
+		scoreboard[li].innerHTML = highscore[li].name + ": " +	highscore[li].score;
+	}
 
 	saveJSONtoServer(highscore);
 }
